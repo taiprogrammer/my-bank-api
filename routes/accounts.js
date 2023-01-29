@@ -100,6 +100,18 @@ router.put("/:id", async (req, res) => {
     const { nome, balance } = req.body;
     let response = { message: "Conta não existente" };
     let status = 204;
+    /*
+
+      const index = data.accounts.findIndex(
+        (account) => account.id === parseInt(id)
+      );
+      data.accounts[index].nome = nome;
+      data.accounts[index].balance = balance;
+
+      const account = req.body
+      findeIndex...
+      data.accounts[index] = account;
+    */
 
     for (let index = 0; index < data.accounts.length; index++) {
       if (data.accounts[index].id === parseInt(id)) {
@@ -115,6 +127,38 @@ router.put("/:id", async (req, res) => {
 
     res.status(status);
     res.json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+    res.end();
+  }
+});
+
+router.patch("/:id", async (req, res) => {
+  try {
+    const data = JSON.parse(await readFile("accounts.json"));
+    const { id } = req.params;
+    const { balance } = req.body;
+    const keys = Object.keys(req.body);
+    let response = { message: "Conta não existente." };
+    let status = 204;
+
+    for (let index = 0; index < data.accounts.length; index++) {
+      if (data.accounts[index].id === parseInt(id)) {
+        if (req.body.balance && keys.length === 1) {
+          data.accounts[index].balance = balance;
+          await writeFile("accounts.json", JSON.stringify(data, null, 2));
+          status = 200;
+          response.message = "Saldo atualizado com sucesso!";
+        } else {
+          status = 400;
+          response.message = "Parametros incorretos";
+        }
+      }
+    }
+
+    res.json(response);
+    res.status(status);
   } catch (error) {
     console.log(error);
     res.status(400);
