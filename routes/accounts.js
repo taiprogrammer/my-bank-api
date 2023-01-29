@@ -1,43 +1,49 @@
 import express from "express";
 const router = express.Router();
 
+import { logger } from "../handler/index.js";
 import { readFile, writeFile } from "../index.js";
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     let account = req.body;
+    let keys = Object.keys(account);
+    let response = { message: "Parametros incorretos" };
+    let status = 204;
 
     const data = JSON.parse(await readFile("accounts.json"));
     account = {
       id: data.nextId++,
       ...account,
     };
-    data.accounts.push(account);
 
-    await writeFile("accounts.json", JSON.stringify(data, null, 2));
-    res.json(account);
-    res.status(201);
+    if (account.nome && account.balance && keys.length === 2) {
+      data.accounts.push(account);
+
+      await writeFile("accounts.json", JSON.stringify(data, null, 2));
+
+      response.message = "Conta cadastrada com sucesso!";
+      status = 201;
+    }
+    res.json(response);
+    res.status(status);
   } catch (error) {
-    res.status(400);
-    console.log(error);
-    res.end();
+    next(error);
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     const data = JSON.parse(await readFile("accounts.json"));
 
     res.status(200);
     res.json(data.accounts);
   } catch (error) {
-    console.log(error);
-    res.status(400);
-    res.end();
+    next(error);
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const data = JSON.parse(await readFile("accounts.json"));
     const { id } = req.params;
@@ -48,6 +54,7 @@ router.get("/:id", async (req, res) => {
       res.json(account);
       res.status(200);
     } else {
+      logger.info("Nenhuma conta encontrada");
       res.json({ message: "Nenhuma conta encontrada" });
       res.status(204);
     }
@@ -59,13 +66,11 @@ router.get("/:id", async (req, res) => {
     //   }
     // }
   } catch (error) {
-    console.log(error);
-    res.status(400);
-    res.end();
+    next(error);
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res, next) => {
   try {
     let data = JSON.parse(await readFile("accounts.json"));
     const { id } = req.params;
@@ -87,13 +92,11 @@ router.delete("/:id", async (req, res) => {
     res.json(response);
     res.status(status);
   } catch (error) {
-    console.log(error);
-    res.status(400);
-    res.end();
+    next(error);
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res, next) => {
   try {
     const data = JSON.parse(await readFile("accounts.json"));
     const { id } = req.params;
@@ -122,19 +125,18 @@ router.put("/:id", async (req, res) => {
 
         status = 200;
         response.message = "Usuário atualizado com sucesso";
+        logger.info("Usuário atualizado com sucesso");
       }
     }
 
     res.status(status);
     res.json(response);
   } catch (error) {
-    console.log(error);
-    res.status(400);
-    res.end();
+    next(error);
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", async (req, res, next) => {
   try {
     const data = JSON.parse(await readFile("accounts.json"));
     const { id } = req.params;
@@ -150,9 +152,11 @@ router.patch("/:id", async (req, res) => {
           await writeFile("accounts.json", JSON.stringify(data, null, 2));
           status = 200;
           response.message = "Saldo atualizado com sucesso!";
+          logger.info("Saldo atualizado com sucesso!");
         } else {
           status = 400;
           response.message = "Parametros incorretos";
+          logger.warn("Parametros incorretos");
         }
       }
     }
@@ -160,10 +164,13 @@ router.patch("/:id", async (req, res) => {
     res.json(response);
     res.status(status);
   } catch (error) {
-    console.log(error);
-    res.status(400);
-    res.end();
+    next(error);
   }
+});
+
+router.use((err, req, res, next) => {
+  res.status(400).send({ error: err.message });
+  logger.error(err);
 });
 
 export default router;
