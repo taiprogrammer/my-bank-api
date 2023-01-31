@@ -1,12 +1,15 @@
 import express, { json } from "express";
 import { promises as fs } from "fs";
+import cors from "cors";
 
 import routerAccount from "./routes/accounts.js";
+import { logger } from "./handler/index.js";
 
 export const { readFile, writeFile } = fs;
 
 const app = express();
 app.use(json());
+app.use(cors());
 
 app.use("/account", routerAccount);
 
@@ -21,10 +24,10 @@ app.listen(3000, async () => {
 
     writeFile("accounts.json", JSON.stringify(initialJson))
       .then(() => {
-        console.log("Ok");
+        logger.info("Ok");
       })
       .catch((err) => {
-        console.log("Not ok");
+        logger.error("Not ok");
       });
   }
 });
