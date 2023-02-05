@@ -2,3 +2,10 @@
 2023-01-29T03:35:18.243Z [my-app] warn: Parametros incorretos
 2023-01-29T03:35:22.874Z [my-app] info: Saldo atualizado com sucesso!
 2023-01-29T03:35:41.639Z [my-app] info: Saldo atualizado com sucesso!
+2023-02-04T22:36:53.866Z [my-app] error: readFile is not defined
+2023-02-04T23:24:57.375Z [my-app] error: data is not defined
+2023-02-04T23:25:56.154Z [my-app] error: data is not defined
+2023-02-05T00:23:28.659Z [my-app] error: account is not defined
+2023-02-05T00:24:08.022Z [my-app] error: req is not defined
+2023-02-05T01:17:44.150Z [my-app] error: Cannot read properties of undefined (reading 'accounts')
+2023-02-05T01:19:22.845Z [my-app] error: Cannot read properties of undefined (reading 'accounts')
