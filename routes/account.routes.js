@@ -20,7 +20,7 @@ router.get("/:id", getAccount);
 
 router.delete("/:id", deleteAccount);
 
-router.put("/:id", updateAccount);
+router.put("/", updateAccount);
 
 router.patch("/:id", updateBalance);
 

@@ -28,7 +28,7 @@ export async function getAccounts(req, res, next) {
   try {
     const data = await get();
     res.status(200);
-    res.json(data.accounts);
+    res.json(data);
   } catch (error) {
     next(error);
   }
@@ -67,12 +67,11 @@ export async function deleteAccount(req, res, next) {
 
 export async function updateAccount(req, res, next) {
   try {
-    const { id } = req.params;
-    const { nome, balance } = req.body;
+    const account = req.body;
 
-    update(id, nome, balance);
+    update(account);
 
-    res.end();
+    res.json(account);
   } catch (error) {
     next(error);
   }

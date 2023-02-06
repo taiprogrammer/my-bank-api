@@ -9,3 +9,6 @@
 2023-02-05T00:24:08.022Z [my-app] error: req is not defined
 2023-02-05T01:17:44.150Z [my-app] error: Cannot read properties of undefined (reading 'accounts')
 2023-02-05T01:19:22.845Z [my-app] error: Cannot read properties of undefined (reading 'accounts')
+2023-02-06T01:13:44.152Z [my-app] error: Cannot read properties of undefined (reading 'accounts')
+2023-02-06T01:17:28.635Z [my-app] info: Ok
+2023-02-06T01:34:21.388Z [my-app] info: Ok

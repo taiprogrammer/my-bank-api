@@ -7,8 +7,8 @@ import {
   insert,
 } from "../repository/account.repository.js";
 
-export async function create(account, keys) {
-  return await insert(account, keys);
+export async function create(account) {
+  return await insert(account);
 }
 
 export async function get() {
@@ -23,8 +23,8 @@ export async function deleteById(id) {
   return await deleteAccount(id);
 }
 
-export async function update(id, nome, balance) {
-  return await updateAccount(id, nome, balance);
+export async function update(account) {
+  return await updateAccount(account);
 }
 
 export async function balanceUpdate(id, balance, keys) {
